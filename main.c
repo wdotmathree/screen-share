@@ -1,34 +1,7 @@
 #include "include.h"
 
+#include "cuda.h"
 #include "ss.h"
-
-uint32_t avg(uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
-	uint32_t r = 0;
-	r += (a >> 24) & 0xff;
-	r += (b >> 24) & 0xff;
-	r += (c >> 24) & 0xff;
-	r += (d >> 24) & 0xff;
-	r >>= 2;
-	uint32_t g = 0;
-	g += (a >> 16) & 0xff;
-	g += (b >> 16) & 0xff;
-	g += (c >> 16) & 0xff;
-	g += (d >> 16) & 0xff;
-	g >>= 2;
-	uint32_t b_ = 0;
-	b_ += (a >> 8) & 0xff;
-	b_ += (b >> 8) & 0xff;
-	b_ += (c >> 8) & 0xff;
-	b_ += (d >> 8) & 0xff;
-	b_ >>= 2;
-	uint32_t a_ = 0;
-	a_ += a & 0xff;
-	a_ += b & 0xff;
-	a_ += c & 0xff;
-	a_ += d & 0xff;
-	a_ >>= 2;
-	return (r << 24) | (g << 16) | (b_ << 8) | a_;
-}
 
 int main(void) {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
@@ -45,21 +18,15 @@ int main(void) {
 		if (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
 				break;
+			} else if (e.type == SDL_KEYDOWN) {
+				if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+					break;
+				}
 			}
 		}
 		ss_get_screenshot(buf);
 		uint64_t tt = SDL_GetPerformanceCounter();
-		for (int j = 0; j < 720; j++) {
-			int sj1 = j + (j >> 1);
-			int sj2 = sj1 + (j & 1);
-			for (int i = 0; i < 1280; i++) {
-				int si1 = i + (i >> 1);
-				int si2 = si1 + (i & 1);
-				((uint32_t *)s->pixels)[i + j * 1280] =
-					avg(((uint32_t *)buf)[si1 + sj1 * 1920], ((uint32_t *)buf)[si2 + sj1 * 1920],
-						((uint32_t *)buf)[si1 + sj2 * 1920], ((uint32_t *)buf)[si2 + sj2 * 1920]);
-			}
-		}
+		scale_img((uint32_t *)buf, (uint32_t *)s->pixels, 1920, 1080, 1280, 720);
 		t += SDL_GetPerformanceCounter() - tt;
 		SDL_UpdateWindowSurface(window);
 		its++;

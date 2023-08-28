@@ -6,9 +6,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#ifdef WINDOWS
+#ifdef _WIN32
 
-#else // LINUX
+#else // __linux__
 
 #endif
 
