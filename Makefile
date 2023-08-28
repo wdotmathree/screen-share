@@ -24,7 +24,7 @@ OBJS=$(addsuffix .o, $(SRCS))
 
 .PHONY: debug release clean
 
-defug: CFLAGS += -g
+debug: CFLAGS += -g
 debug: a.out
 	./a.out
 
