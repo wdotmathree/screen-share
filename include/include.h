@@ -1,6 +1,9 @@
 #pragma once
-#ifndef _INCLUDE_H_
-#define _INCLUDE_H_
+#ifndef _INCLUDE_H
+#define _INCLUDE_H
+
+#include <stdbool.h>
+#include <stdint.h>
 
 #ifdef WINDOWS
 

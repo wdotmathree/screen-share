@@ -18,7 +18,7 @@ else
 		$(error Unknown OS)
 	endif
 endif
-SRCS += $(wildcard $(ARCH)/*.c)
+SRCS += $(wildcard $(ARCH)/*)
 
 OBJS=$(addsuffix .o, $(SRCS))
 
