@@ -2,6 +2,7 @@
 #ifndef _INCLUDE_H
 #define _INCLUDE_H
 
+#include <SDL.h>
 #include <stdbool.h>
 #include <stdint.h>
 
