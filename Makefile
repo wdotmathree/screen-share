@@ -1,9 +1,9 @@
 CC=g++
-INCLUDE=
+INCLUDE=-Iinclude
 LIBS=
 CFLAGS:=${CXXFLAGS} -Wall -Wextra -Wpedantic -fpermissive -fno-trapping-math -fno-math-errno -fno-signed-zeros -march=native -falign-functions=16
 SRCS=$(wildcard *.c)
-HDRS=$(wildcard *.h)
+HDRS=$(wildcard include/*.h)
 
 ifeq ($(OS),Windows_NT)
 	ARCH = windows
@@ -18,12 +18,9 @@ else
 		$(error Unknown OS)
 	endif
 endif
-
 SRCS += $(wildcard $(ARCH)/*.c)
-HDRS += $(wildcard $(ARCH)/*.h)
-INCLUDE += -I$(ARCH)
 
-OBJS=$(SRCS:.c=.o)
+OBJS=$(addsuffix .o, $(SRCS))
 
 .PHONY: debug release clean
 
@@ -38,8 +35,11 @@ release: a.out
 a.out: $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) $(LIBS)
 
-%.o: %.c $(HDRS) Makefile
+%.c.o: %.c $(HDRS) Makefile
 	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDE)
+
+%.asm.o: %.asm $(HDRS) Makefile
+	$(ASM) -f elf64 $< -o $@
 
 clean:
 	rm -f $(OBJS) a.out

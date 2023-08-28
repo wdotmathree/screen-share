@@ -1,1 +1,7 @@
+.vscode/
+.vs/
+
 old/
+
+a.out
+*.o
