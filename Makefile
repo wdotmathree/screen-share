@@ -1,7 +1,7 @@
-CC=g++
-INCLUDE=-Iinclude
-LIBS=
-CFLAGS:=${CXXFLAGS} -Wall -Wextra -Wpedantic -fpermissive -fno-trapping-math -fno-math-errno -fno-signed-zeros -march=native -falign-functions=16
+CC=gcc
+INCLUDE=-Iinclude $(shell sdl2-config --cflags)
+LIBS=$(shell sdl2-config --libs)
+CFLAGS:=${CXXFLAGS} -Wall -Wextra -Wpedantic -fno-trapping-math -fno-math-errno -fno-signed-zeros -march=native -falign-functions=16
 SRCS=$(wildcard *.c)
 HDRS=$(wildcard include/*.h)
 
@@ -18,13 +18,13 @@ else
 		$(error Unknown OS)
 	endif
 endif
-SRCS += $(wildcard $(ARCH)/*)
+SRCS += $(wildcard $(ARCH)/*.c) $(wildcard $(ARCH)/*.asm)
 
 OBJS=$(addsuffix .o, $(SRCS))
 
 .PHONY: debug release clean
 
-debug: CFLAGS += -g
+debug: CFLAGS += -g # -fsanitize=address -fsanitize=undefined
 debug: a.out
 	./a.out
 
