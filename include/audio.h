@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _AUDIOCAP_H
-#define _AUDIOCAP_H
+#ifndef _AUDIO_H
+#define _AUDIO_H
 
 #include "include.h"
 

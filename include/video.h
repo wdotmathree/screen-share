@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _SCREENCAP_H
-#define _SCREENCAP_H
+#ifndef _VIDEO_H
+#define _VIDEO_H
 
 #include "include.h"
 
