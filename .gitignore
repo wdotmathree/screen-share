@@ -3,5 +3,5 @@
 
 old/
 
-a.out
 *.o
+build/
