@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 
+set(CMAKE_CUDA_ARCHITECTURES 61)
+include(CheckLanguage)
+
 project(screen-share)
 set(PROJECT_VERSION 0.0.1)
 
@@ -16,9 +19,8 @@ include_directories(screen-share ${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_executable(client client.c)
 # add_executable(server global.o server.c)
 
-enable_language(CUDA)
-set(CMAKE_CUDA_ARCHITECTURES 61)
 if (CMAKE_CUDA_COMPILER)
+	enable_language(CUDA)
 	aux_source_directory(cuda CU_SOURCES)
 else()
 	message(WARNING "No CUDA compiler found, CUDA support disabled")
