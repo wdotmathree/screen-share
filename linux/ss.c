@@ -36,3 +36,11 @@ int ss_get_screenshot(char *buf) {
 	XDestroyImage(img);
 	return len;
 }
+
+int ss_get_width(void) {
+	return width;
+}
+
+int ss_get_height(void) {
+	return height;
+}

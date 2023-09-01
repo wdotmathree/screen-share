@@ -4,7 +4,7 @@ set(CMAKE_CUDA_ARCHITECTURES 61)
 include(CheckLanguage)
 
 project(screen-share)
-set(PROJECT_VERSION 0.0.1)
+set(PROJECT_VERSION 0.0.2)
 
 find_package(SDL2 REQUIRED)
 include_directories(screen-share ${SDL2_INCLUDE_DIRS})

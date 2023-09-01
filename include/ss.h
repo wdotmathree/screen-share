@@ -25,4 +25,16 @@ int ss_get_dimensions(int *, int *);
  */
 int ss_get_screenshot(char *);
 
+/**
+ * @brief Get the width of the screen.
+ * @return The width of the screen.
+ */
+int ss_get_width(void);
+
+/**
+ * @brief Get the height of the screen.
+ * @return The height of the screen.
+ */
+int ss_get_height(void);
+
 #endif
