@@ -13,9 +13,6 @@ set(CMAKE_C_STANDARD 11)
 
 include_directories(screen-share ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_executable(client client.c)
-# add_executable(server global.o server.c)
-
 if (CMAKE_CUDA_COMPILER)
 	enable_language(CUDA)
 	aux_source_directory(cuda CU_SOURCES)
@@ -44,6 +41,7 @@ endif()
 
 link_libraries(${SDL2_LIBRARIES})
 
-add_library(global OBJECT ${SOURCES} ${CU_SOURCES} ${OS_SOURCES})
-target_link_libraries(client global)
-# target_link_libraries(server global)
+add_executable(client client.c ${SOURCES} ${CU_SOURCES} ${OS_SOURCES})
+
+aux_source_directory(server SERVER_SOURCES)
+# add_executable(server server.c src/crypto.c src/protocol.c linux/net.c ${SERVER_SOURCES})
