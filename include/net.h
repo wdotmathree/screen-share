@@ -18,7 +18,7 @@
  * @param port The port number of the server
  * @return The sockfd of the connected socket, or -1 on error.
  */
-int tcp_connect(const char *, int);
+int tcp_connect(const char *, short);
 
 /**
  * @brief Send data to a TCP peer.
@@ -27,7 +27,7 @@ int tcp_connect(const char *, int);
  * @param len The length of the buffer
  * @return Number of bytes sent, or -1 on error.
  */
-int tcp_send(int, const char *, int);
+ssize_t tcp_send(int, const char *, int);
 
 /**
  * @brief Receive data from a TCP peer.
@@ -36,7 +36,7 @@ int tcp_send(int, const char *, int);
  * @param len The length of the buffer
  * @return Number of bytes received, or -1 on error.
  */
-int tcp_recv(int, char *, int);
+ssize_t tcp_recv(int, char *, int);
 
 /**
  * @brief Close a socket.
@@ -65,7 +65,7 @@ int udp_bind(int);
  * @param addr The address of the peer
  * @return Number of bytes sent, or -1 on error.
  */
-int udp_send(int, const char *, int, const struct sockaddr_in6 *);
+ssize_t udp_send(int, const char *, int, const struct sockaddr_in6 *);
 
 /**
  * @brief Receive data from a UDP peer.
@@ -74,6 +74,6 @@ int udp_send(int, const char *, int, const struct sockaddr_in6 *);
  * @param len The length of the buffer
  * @return Number of bytes received, or -1 on error.
  */
-int udp_recv(int, char *, int);
+ssize_t udp_recv(int, char *, int);
 
 #endif

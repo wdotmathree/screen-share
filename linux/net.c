@@ -1,6 +1,6 @@
 #include "net.h"
 
-int tcp_connect(const char *host, int port) {
+int tcp_connect(const char *host, short port) {
 	int sockfd = socket(AF_INET6, SOCK_STREAM, 0);
 	if (sockfd < 0) {
 		perror("socket");
@@ -25,8 +25,8 @@ int tcp_connect(const char *host, int port) {
 	return sockfd;
 }
 
-int tcp_send(int sockfd, const char *buf, int len) {
-	int ret = send(sockfd, buf, len, 0);
+ssize_t tcp_send(int sockfd, const char *buf, int len) {
+	ssize_t ret = send(sockfd, buf, len, 0);
 	if (ret < 0) {
 		perror("send");
 		return -1;
@@ -34,8 +34,8 @@ int tcp_send(int sockfd, const char *buf, int len) {
 	return ret;
 }
 
-int tcp_recv(int sockfd, char *buf, int len) {
-	int ret = recv(sockfd, buf, len, 0);
+ssize_t tcp_recv(int sockfd, char *buf, int len) {
+	ssize_t ret = recv(sockfd, buf, len, 0);
 	if (ret < 0) {
 		perror("recv");
 		return -1;
@@ -79,8 +79,8 @@ int udp_bind(int port) {
 	return sockfd;
 }
 
-int udp_send(int sockfd, const char *buf, int len, const struct sockaddr_in6 *addr) {
-	int ret = sendto(sockfd, buf, len, 0, (struct sockaddr *)addr, sizeof(*addr));
+ssize_t udp_send(int sockfd, const char *buf, int len, const struct sockaddr_in6 *addr) {
+	ssize_t ret = sendto(sockfd, buf, len, 0, (struct sockaddr *)addr, sizeof(*addr));
 	if (ret < 0) {
 		perror("sendto");
 		return -1;
@@ -88,10 +88,10 @@ int udp_send(int sockfd, const char *buf, int len, const struct sockaddr_in6 *ad
 	return ret;
 }
 
-int udp_recv(int sockfd, char *buf, int len) {
+ssize_t udp_recv(int sockfd, char *buf, int len) {
 	struct sockaddr_in6 addr;
 	socklen_t addrlen = sizeof(addr);
-	int ret = recvfrom(sockfd, buf, len, 0, (struct sockaddr *)&addr, &addrlen);
+	ssize_t ret = recvfrom(sockfd, buf, len, 0, (struct sockaddr *)&addr, &addrlen);
 	if (ret < 0) {
 		perror("recvfrom");
 		return -1;
