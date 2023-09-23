@@ -40,6 +40,7 @@ else()
 endif()
 
 link_libraries(${SDL2_LIBRARIES})
+link_libraries(m)
 
 add_executable(client client.c ${SOURCES} ${CU_SOURCES} ${OS_SOURCES})
 

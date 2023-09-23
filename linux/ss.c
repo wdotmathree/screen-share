@@ -27,7 +27,7 @@ int ss_get_dimensions(int *w, int *h) {
 	return 0;
 }
 
-int ss_get_screenshot(char *buf) {
+int ss_get_screenshot(uint8_t *buf) {
 	XImage *img = XGetImage(disp, root, 0, 0, width, height, AllPlanes, ZPixmap);
 	if (!img)
 		return -1;

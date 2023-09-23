@@ -23,7 +23,7 @@ int ss_get_dimensions(int *, int *);
  * @param buf The buffer to save the screenshot into
  * @return The length of the buffer filled, or -1 on error.
  */
-int ss_get_screenshot(char *);
+int ss_get_screenshot(uint8_t *);
 
 /**
  * @brief Get the width of the screen.
