@@ -17,7 +17,6 @@ int main(void) {
 	uint8_t *uncompressed = malloc(1280 * 720 * 4);
 	uint8_t *compressed = malloc(1280 * 720 * 4);
 	SDL_Event e;
-	uint32_t its = 0;
 	bool stop = false;
 	while (!stop) {
 		while (SDL_PollEvent(&e)) {
@@ -38,7 +37,6 @@ int main(void) {
 		decompress_img((uint32_t *)s->pixels, compressed, out_len, 1280, 720);
 		printf("%lf\n", (double)(SDL_GetPerformanceCounter() - t) / SDL_GetPerformanceFrequency());
 		SDL_UpdateWindowSurface(window);
-		its++;
 	}
 	free(buf);
 	SDL_DestroyWindow(window);

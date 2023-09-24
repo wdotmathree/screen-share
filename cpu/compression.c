@@ -34,12 +34,12 @@ size_t compress_img(uint8_t *out, uint8_t *in, const int w, const int h) {
 					uint8_t b = in[((i + k) + (j + l) * w) * 4 + 0];
 					uint8_t g = in[((i + k) + (j + l) * w) * 4 + 1];
 					uint8_t r = in[((i + k) + (j + l) * w) * 4 + 2];
-					// tmp[k][l][0] = (0.299 * r + 0.587 * g + 0.114 * b) - 128;
-					// tmp[k][l][1] = -0.168736 * r - 0.331264 * g + 0.5 * b;
-					// tmp[k][l][2] = 0.5 * r - 0.418688 * g - 0.081312 * b;
-					tmp[k][l][0] = r - 128;
-					tmp[k][l][1] = g - 128;
-					tmp[k][l][2] = b - 128;
+					tmp[k][l][0] =
+						fmaxf(fminf((0.299f * r + 0.587f * g + 0.114f * b) - 128, 127), -128);
+					tmp[k][l][1] =
+						fmaxf(fminf(-0.168736f * r - 0.331264f * g + 0.5f * b, 127), -128);
+					tmp[k][l][2] =
+						fmaxf(fminf(0.5f * r - 0.418688f * g - 0.081312f * b, 127), -128);
 				}
 			}
 			// Perform DCT
@@ -130,12 +130,9 @@ void decompress_img(uint8_t *out, const uint8_t *in, size_t len, const int w, co
 					int8_t y = idct[k][l][0];
 					int8_t cb = idct[k][l][1];
 					int8_t cr = idct[k][l][2];
-					// uint8_t r = y + 1.402 * cr + 128;
-					// uint8_t g = y - 0.344136 * cb - 0.714136 * cr + 128;
-					// uint8_t b = y + 1.772 * cb + 128;
-					uint8_t r = y + 128;
-					uint8_t g = cb + 128;
-					uint8_t b = cr + 128;
+					uint8_t r = fmaxf(fminf(y + 1.402f * cr, 127), -128) + 128;
+					uint8_t g = fmaxf(fminf(y - 0.344136f * cb - 0.714136f * cr, 127), -128) + 128;
+					uint8_t b = fmaxf(fminf(y + 1.772f * cb, 127), -128) + 128;
 					out[((i + k) + (j + l) * w) * 4 + 0] = b;
 					out[((i + k) + (j + l) * w) * 4 + 1] = g;
 					out[((i + k) + (j + l) * w) * 4 + 2] = r;
