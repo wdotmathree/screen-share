@@ -35,7 +35,10 @@ int main(void) {
 		scale_img((uint32_t *)buf, (uint32_t *)uncompressed, width, height, 1280, 720);
 		size_t out_len = compress_img(compressed, uncompressed, 1280, 720);
 		decompress_img((uint32_t *)s->pixels, compressed, out_len, 1280, 720);
-		printf("%lf\n", (double)(SDL_GetPerformanceCounter() - t) / SDL_GetPerformanceFrequency());
+		printf(
+			"Compression ratio: %d%% Frame time: %lf\n", (int)(100.0 * out_len / (1280 * 720 * 3)),
+			(double)(SDL_GetPerformanceCounter() - t) / SDL_GetPerformanceFrequency()
+		);
 		SDL_UpdateWindowSurface(window);
 	}
 	free(buf);
