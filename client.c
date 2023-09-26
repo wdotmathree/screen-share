@@ -15,10 +15,11 @@ int main(void) {
 	int height = ss_get_height();
 	uint8_t *buf = malloc(width * height * 4);
 	uint8_t *uncompressed = malloc(1280 * 720 * 4);
-	uint8_t *compressed = malloc(1280 * 720 * 4);
+	uint8_t *compressed = malloc(1280 * 720 * 4 * 2);
 	SDL_Event e;
 	bool stop = false;
 	while (!stop) {
+		// SDL_Delay(1000);
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
 				stop = true;
@@ -40,6 +41,8 @@ int main(void) {
 			(double)(SDL_GetPerformanceCounter() - t) / SDL_GetPerformanceFrequency()
 		);
 		SDL_UpdateWindowSurface(window);
+		// SDL_Delay(10000);
+		// stop = true;
 	}
 	free(buf);
 	SDL_DestroyWindow(window);

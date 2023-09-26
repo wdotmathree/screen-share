@@ -35,6 +35,7 @@ size_t compress_img(uint8_t *out, uint8_t *in, const int w, const int h) {
 	// Compress the image in 8x8 blocks.
 	int8_t prevdc[3] = {0};
 	size_t outlen = 0;
+	int occ[256] = {0};
 	for (int i = 0; i < w; i += 8) {
 		for (int j = 0; j < h; j += 8) {
 			// Convert into YCbCr
@@ -118,6 +119,8 @@ size_t compress_img(uint8_t *out, uint8_t *in, const int w, const int h) {
 				k++;
 			}
 			zigzag[k][0] = dct[l][m][0];
+			zigzag[k][1] = dct[l][m][1];
+			zigzag[k][2] = dct[l][m][2];
 			// Run-length encoding
 			for (int l = 0; l < 3; l++) {
 				uint8_t run = 0;
@@ -126,7 +129,16 @@ size_t compress_img(uint8_t *out, uint8_t *in, const int w, const int h) {
 					if (zigzag[k][l] == 0) {
 						run++;
 					} else {
-						out[outlen++] = run;
+						while (run > 15) {
+							out[outlen++] = 0xf0;
+							occ[0xf0]++;
+							out[outlen++] = 0x00;
+							run -= 16;
+						}
+						uint8_t sym = run << 4;
+						sym |= zigzag[k][l] == 0 ? 0x00 : (__builtin_clz(abs(zigzag[k][l])) - 23);
+						out[outlen++] = sym;
+						occ[sym]++;
 						out[outlen++] = zigzag[k][l];
 						run = 0;
 					}
@@ -138,6 +150,7 @@ size_t compress_img(uint8_t *out, uint8_t *in, const int w, const int h) {
 			}
 		}
 	}
+	// Create huffman tree
 	return outlen;
 }
 
@@ -148,18 +161,19 @@ void decompress_img(uint8_t *out, const uint8_t *in, size_t len, const int w, co
 	for (int i = 0; i < w; i += 8) {
 		for (int j = 0; j < h; j += 8) {
 			// Reverse entropy coding
-			int8_t zigzag[3][64] = {0};
+			int8_t zigzag[64][3] = {0};
 			for (int k = 0; k < 3; k++) {
 				int l = 1;
 				zigzag[0][k] = prevdc[k] + in[ii++];
 				prevdc[k] = zigzag[0][k];
 				while (l < 64) {
 					uint8_t run = in[ii++];
+					run >>= 4;
 					int8_t val = in[ii++];
 					if (run == 0 && val == 0)
 						break;
 					l += run;
-					zigzag[k][l] = val;
+					zigzag[l][k] = val;
 					l++;
 				}
 			}
@@ -170,9 +184,9 @@ void decompress_img(uint8_t *out, const uint8_t *in, size_t len, const int w, co
 			int m = 0;
 			bool dir = true;
 			while (l != 7 || m != 7) {
-				dct[l][m][0] = zigzag[0][k];
-				dct[l][m][1] = zigzag[1][k];
-				dct[l][m][2] = zigzag[2][k];
+				dct[l][m][0] = zigzag[k][0];
+				dct[l][m][1] = zigzag[k][1];
+				dct[l][m][2] = zigzag[k][2];
 				if (dir) {
 					if (m == 7) {
 						l++;
@@ -207,7 +221,7 @@ void decompress_img(uint8_t *out, const uint8_t *in, size_t len, const int w, co
 					tmp[k1][k2][2] = dct[k1][k2][2] * Qchrom[k1][k2];
 				}
 			}
-			// Perform IDCT
+			// // Perform IDCT
 			int8_t idct[8][8][3] = {0};
 			for (int x = 0; x < 8; x++) {
 				for (int y = 0; y < 8; y++) {
